@@ -1,64 +1,71 @@
 'use client';
 
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import Image from 'next/image';
+import { Github, Twitter, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-t from-gray-100 to-white">
-      <div className="container mx-auto px-6 md:px-12 lg:px-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <div>
-          <Image src="/logo.png" alt="Logo" width={50} height={50} />
-          <span className="text-lg font-thin mb-2 block">AI CV Oluşturucu</span>
-          <p className="text-sm">
-            AI destekli CV oluşturma platformu ile kariyerinizde bir adım öne geçin. Profesyonel ve etkili CV'ler hazırlamak artık çok kolay.
-          </p>
-        </div>
-        
-        {/* Bölüm 2: Hızlı Erişim */}
-        <div>
-          <h3 className="text-base font-semibold text-white mb-4">Hızlı Erişim</h3>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <Link href="/" className="hover:text-white transition-colors">Anasayfa</Link>
-            </li>
-            <li>
-              <Link href="/features" className="hover:text-white transition-colors">Özellikler</Link>
-            </li>
-            <li>
-              <Link href="/pricing" className="hover:text-white transition-colors">Fiyatlandırma</Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover:text-white transition-colors">İletişim</Link>
-            </li>
-          </ul>
-        </div>
-        
-        {/* Bölüm 3: Sosyal Medya */}
-        <div>
-          <h3 className="text-base font-semibold text-white mb-4">Bizi Takip Edin</h3>
-          <div className="flex gap-4">
-            <Link href="https://facebook.com" target="_blank">
-              <Facebook className="w-6 h-6 hover:text-white transition-colors" />
-            </Link>
-            <Link href="https://twitter.com" target="_blank">
-              <Twitter className="w-6 h-6 hover:text-white transition-colors" />
-            </Link>
-            <Link href="https://instagram.com" target="_blank">
-              <Instagram className="w-6 h-6 hover:text-white transition-colors" />
-            </Link>
-            <Link href="https://linkedin.com" target="_blank">
-              <Linkedin className="w-6 h-6 hover:text-white transition-colors" />
-            </Link>
+    <footer className="bg-indigo-50">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-indigo-900">CV Builder</h3>
+            <p className="text-gray-600">
+              Yapay zeka destekli profesyonel CV oluşturma platformu
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-indigo-900 mb-4">Hızlı Linkler</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                  Ana Sayfa
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                  Hakkında
+                </Link>
+              </li>
+              <li>
+                <Link href="/generate" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                  CV Oluştur
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-indigo-900 mb-4">İletişim</h4>
+            <ul className="space-y-2 text-gray-600">
+              <li>info@cvbuilder.com</li>
+              <li>+90 (555) 123 45 67</li>
+              <li>İstanbul, Türkiye</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-indigo-900 mb-4">Bizi Takip Edin</h4>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors">
+                <Github className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Alt Çizgi ve Telif Hakkı */}
-      <div className=" mt-8 pb-8 pt-4 text-center text-sm opacity-50">
-        <p>&copy; {new Date().getFullYear()} CV.ai. Tüm hakları saklıdır.</p>
+        <div className="mt-8 pt-8 border-t border-indigo-100">
+          <p className="text-center text-gray-600">
+            © {new Date().getFullYear()} CV Builder. Tüm hakları saklıdır.
+          </p>
+        </div>
       </div>
     </footer>
   );

@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Upload, Plus, Minus, Mail, Phone, Calendar, Shield, MessageSquare, School, Briefcase, Circle, Loader2, Sparkles } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
+import { Upload, Plus, Minus, Mail, Phone, Calendar, Shield, MessageSquare, School, Briefcase, Circle, Loader2, Sparkles, Download } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function Generate() {
   const [step, setStep] = useState(1);
@@ -24,7 +25,6 @@ export default function Generate() {
     interests: '',
     bio: '',
   });
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState<{[key: string]: boolean}>({
     bio: false,
     skills: false,
@@ -53,10 +53,7 @@ export default function Generate() {
   const addExperience = () => {
     setFormData({
       ...formData,
-      experiences: [
-        ...formData.experiences,
-        { id: Date.now(), role: '', company: '', duration: '' },
-      ],
+      experiences: [...formData.experiences, { id: Date.now(), role: '', company: '', duration: '' }],
     });
   };
 
@@ -77,10 +74,7 @@ export default function Generate() {
   const addEducation = () => {
     setFormData({
       ...formData,
-      education: [
-        ...formData.education,
-        { id: Date.now(), school: '', degree: '', year: '' },
-      ],
+      education: [...formData.education, { id: Date.now(), school: '', degree: '', year: '' }],
     });
   };
 
@@ -88,21 +82,6 @@ export default function Generate() {
     setFormData({
       ...formData,
       education: formData.education.filter((edu) => edu.id !== id),
-    });
-  };
-
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
-
-  const downloadPDF = () => {
-    const element = document.getElementById('cv-preview');
-    html2pdf(element, {
-      margin: 3,
-      filename: 'cv.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      background: '#f2f4fa',
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     });
   };
 
@@ -131,350 +110,456 @@ export default function Generate() {
     }
   };
 
+  const downloadPDF = async () => {
+    try {
+      const element = document.getElementById('cv-preview');
+      if (!element) return;
+
+      const canvas = await html2canvas(element, {
+        margin: 4,
+        useCORS: true,
+        logging: false,
+        allowTaint: true,
+        onclone: (clonedDoc) => {
+          const style = clonedDoc.createElement('style');
+          style.innerHTML = `
+            .icon-wrapper {
+              display: flex !important;
+              align-items: center !important;
+              gap: 8px !important;
+            }
+            .icon {
+              margin-top: 4px !important;
+              width: 16px !important;
+              height: 16px !important;
+              flex-shrink: 0 !important;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      pdf.setProperties({
+        title: 'CV',
+        subject: 'CV',
+        creator: 'CV Builder',
+        author: formData.name,
+        keywords: 'cv, resume',
+        producer: 'CV Builder'
+      });
+      pdf.save('cv.pdf');
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('PDF oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
+    }
+  };
+
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
+
   return (
     <div className="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[80vh]">
-      <Card className="p-6  h-full bg-white rounded-none">
+      <Card className="p-6 h-full bg-white border-indigo-100">
         {step === 1 && (
           <>
-            <h2 className="text-base font-normal mb-4">1. Kişisel Bilgiler</h2>
-            <label className="block mb-3 text-gray-700">Fotoğraf Yükle</label>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
+            <h2 className="text-xl font-semibold text-indigo-900 mb-6">1. Kişisel Bilgiler</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fotoğraf Yükle</label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="border-indigo-200 focus:ring-indigo-500"
+                />
+              </div>
 
-            <Input
-              placeholder="Ad Soyad"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
-            <Input
-              placeholder="E-posta"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
-            <Input
-              placeholder="Telefon"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
-            <Input
-              placeholder="Doğum Tarihi"
-              name="birthdate"
-              value={formData.birthdate}
-              onChange={handleChange}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
-            <Input
-              placeholder="Askerlik Durumu"
-              name="militaryStatus"
-              value={formData.militaryStatus}
-              onChange={handleChange}
-              className="mb-3"
-              style={{ fontSize: '16px' }}
-            />
-            <div className="relative mb-6">
-              <Textarea
-                placeholder="Biyografi"
-                name="bio"
-                value={formData.bio}
+              <Input
+                placeholder="Ad Soyad"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                className="min-h-[120px] resize-none"
-                style={{ fontSize: '16px' }}
+                className="border-indigo-200 focus:ring-indigo-500"
               />
-              <Button
-                onClick={() => enhanceText('bio')}
-                disabled={isEnhancing.bio || !formData.bio}
-                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
-                variant="ghost"
-                size="icon"
-                title="AI ile İyileştir"
-              >
-                {isEnhancing.bio ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-              </Button>
+              <Input
+                placeholder="E-posta"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="border-indigo-200 focus:ring-indigo-500"
+              />
+              <Input
+                placeholder="Telefon"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="border-indigo-200 focus:ring-indigo-500"
+              />
+              <Input
+                placeholder="Doğum Tarihi"
+                name="birthdate"
+                value={formData.birthdate}
+                onChange={handleChange}
+                className="border-indigo-200 focus:ring-indigo-500"
+              />
+              <Input
+                placeholder="Askerlik Durumu"
+                name="militaryStatus"
+                value={formData.militaryStatus}
+                onChange={handleChange}
+                className="border-indigo-200 focus:ring-indigo-500"
+              />
+              
+              <div className="relative">
+                <Textarea
+                  placeholder="Biyografi"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="min-h-[120px] resize-none border-indigo-200 focus:ring-indigo-500"
+                />
+                <Button
+                  onClick={() => enhanceText('bio')}
+                  disabled={isEnhancing.bio || !formData.bio}
+                  className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                  variant="ghost"
+                  size="icon"
+                  title="AI ile İyileştir"
+                >
+                  {isEnhancing.bio ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4 text-white" />
+                  )}
+                </Button>
+              </div>
             </div>
           </>
         )}
 
         {step === 2 && (
           <>
-            <h2 className="text-base font-normal mb-4">2. Eğitim ve İş Tecrübeleri</h2>
+            <h2 className="text-xl font-semibold text-indigo-900 mb-6">2. Eğitim ve İş Tecrübeleri</h2>
             {formData.education.map((edu) => (
-              <div key={edu.id} className="mb-4 border p-4 rounded-md bg-gray-50">
+              <div key={edu.id} className="mb-4 p-4 rounded-lg bg-indigo-50 border border-indigo-100">
                 <Input
                   placeholder="Okul"
                   value={edu.school}
                   onChange={(e) => handleEducationChange(edu.id, 'school', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
                 <Input
                   placeholder="Bölüm"
                   value={edu.degree}
                   onChange={(e) => handleEducationChange(edu.id, 'degree', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
                 <Input
                   placeholder="Mezuniyet Yılı"
                   value={edu.year}
                   onChange={(e) => handleEducationChange(edu.id, 'year', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
-                <Button variant="destructive" onClick={() => removeEducation(edu.id)} className="text-sm">
-                  <Minus className="w-4 h-4" /> Eğitimi Kaldır
+                <Button 
+                  variant="destructive" 
+                  onClick={() => removeEducation(edu.id)} 
+                  className="text-sm"
+                >
+                  <Minus className="w-4 h-4 mr-2" /> Eğitimi Kaldır
                 </Button>
               </div>
             ))}
-            <Button onClick={addEducation} className="mt-2 text-sm">
-              <Plus className="w-4 h-4" /> Eğitim Ekle
+            <Button 
+              onClick={addEducation} 
+              className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Eğitim Ekle
             </Button>
-            <h3 className="text-base font-normal mt-6 mb-4">İş Tecrübeleri</h3>
+
+            <h3 className="text-lg font-semibold text-indigo-900 mt-8 mb-4">İş Tecrübeleri</h3>
             {formData.experiences.map((exp) => (
-              <div key={exp.id} className="mb-4 border p-4 rounded-md bg-gray-50">
+              <div key={exp.id} className="mb-4 p-4 rounded-lg bg-indigo-50 border border-indigo-100">
                 <Input
                   placeholder="Pozisyon"
                   value={exp.role}
                   onChange={(e) => handleExperienceChange(exp.id, 'role', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
                 <Input
                   placeholder="Şirket"
                   value={exp.company}
                   onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
                 <Input
                   placeholder="Süre"
                   value={exp.duration}
                   onChange={(e) => handleExperienceChange(exp.id, 'duration', e.target.value)}
-                  className="mb-2"
-                  style={{ fontSize: '16px' }}
+                  className="mb-2 border-indigo-200 focus:ring-indigo-500"
                 />
-                <Button variant="destructive" onClick={() => removeExperience(exp.id)} className="text-sm">
-                  <Minus className="w-4 h-4" /> Tecrübeyi Kaldır
+                <Button 
+                  variant="destructive" 
+                  onClick={() => removeExperience(exp.id)} 
+                  className="text-sm"
+                >
+                  <Minus className="w-4 h-4 mr-2" /> Tecrübeyi Kaldır
                 </Button>
               </div>
             ))}
-            <Button onClick={addExperience} className="mt-2 text-sm">
-              <Plus className="w-4 h-4" /> Tecrübe Ekle
+            <Button 
+              onClick={addExperience} 
+              className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Tecrübe Ekle
             </Button>
           </>
         )}
 
         {step === 3 && (
           <>
-            <h2 className="text-base font-normal mb-4">3. İlgi Alanları ve Beceriler</h2>
-            <div className="relative mb-6">
-              <Textarea
-                placeholder="Beceriler"
-                name="skills"
-                value={formData.skills}
-                onChange={handleChange}
-                className="min-h-[120px] resize-none"
-                style={{ fontSize: '16px' }}
-              />
-              <Button
-                onClick={() => enhanceText('skills')}
-                disabled={isEnhancing.skills || !formData.skills}
-                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
-                variant="ghost"
-                size="icon"
-                title="AI ile İyileştir"
-              >
-                {isEnhancing.skills ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
+            <h2 className="text-xl font-semibold text-indigo-900 mb-6">3. İlgi Alanları ve Beceriler</h2>
+            <div className="space-y-6">
+              <div className="relative">
+                <Textarea
+                  placeholder="Beceriler"
+                  name="skills"
+                  value={formData.skills}
+                  onChange={handleChange}
+                  className="min-h-[120px] resize-none border-indigo-200 focus:ring-indigo-500"
+                />
+                <Button
+                  onClick={() => enhanceText('skills')}
+                  disabled={isEnhancing.skills || !formData.skills}
+                  className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                  variant="ghost"
+                  size="icon"
+                  title="AI ile İyileştir"
+                >
+                  {isEnhancing.skills ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4 text-white" />
+                  )}
+                </Button>
+              </div>
 
-            <div className="relative mb-6">
-              <Textarea
-                placeholder="İlgi Alanları"
-                name="interests"
-                value={formData.interests}
-                onChange={handleChange}
-                className="min-h-[120px] resize-none"
-                style={{ fontSize: '16px' }}
-              />
-              <Button
-                onClick={() => enhanceText('interests')}
-                disabled={isEnhancing.interests || !formData.interests}
-                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
-                variant="ghost"
-                size="icon"
-                title="AI ile İyileştir"
-              >
-                {isEnhancing.interests ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
+              <div className="relative">
+                <Textarea
+                  placeholder="İlgi Alanları"
+                  name="interests"
+                  value={formData.interests}
+                  onChange={handleChange}
+                  className="min-h-[120px] resize-none border-indigo-200 focus:ring-indigo-500"
+                />
+                <Button
+                  onClick={() => enhanceText('interests')}
+                  disabled={isEnhancing.interests || !formData.interests}
+                  className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                  variant="ghost"
+                  size="icon"
+                  title="AI ile İyileştir"
+                >
+                  {isEnhancing.interests ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4 text-white" />
+                  )}
+                </Button>
+              </div>
 
-            <div className="relative mb-6">
-              <Textarea
-                placeholder="Diller"
-                name="languages"
-                value={formData.languages}
-                onChange={handleChange}
-                className="min-h-[120px] resize-none"
-                style={{ fontSize: '16px' }}
-              />
-              <Button
-                onClick={() => enhanceText('languages')}
-                disabled={isEnhancing.languages || !formData.languages}
-                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
-                variant="ghost"
-                size="icon"
-                title="AI ile İyileştir"
-              >
-                {isEnhancing.languages ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-              </Button>
+              <div className="relative">
+                <Textarea
+                  placeholder="Diller"
+                  name="languages"
+                  value={formData.languages}
+                  onChange={handleChange}
+                  className="min-h-[120px] resize-none border-indigo-200 focus:ring-indigo-500"
+                />
+                <Button
+                  onClick={() => enhanceText('languages')}
+                  disabled={isEnhancing.languages || !formData.languages}
+                  className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                  variant="ghost"
+                  size="icon"
+                  title="AI ile İyileştir"
+                >
+                  {isEnhancing.languages ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4 text-white" />
+                  )}
+                </Button>
+              </div>
             </div>
           </>
         )}
 
         <div className="mt-6 flex justify-between">
-          {step > 1 && <Button onClick={prevStep}>Geri</Button>}
+          {step > 1 && (
+            <Button 
+              onClick={prevStep}
+              variant="outline" 
+              className="border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+            >
+              Geri
+            </Button>
+          )}
           {step < 3 ? (
-            <Button onClick={nextStep}>Sonraki</Button>
+            <Button 
+              onClick={nextStep}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white ml-auto"
+            >
+              Sonraki
+            </Button>
           ) : (
-            <Button onClick={downloadPDF}>PDF İndir</Button>
+            <Button 
+              onClick={downloadPDF}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white ml-auto"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              PDF İndir
+            </Button>
           )}
         </div>
       </Card>
 
-      <div id="cv-preview" className="p-6 rounded-none bg-slate-100">
+      <div id="cv-preview" className="p-6 rounded-lg bg-white border border-indigo-100 shadow-lg">
         <div className="flex items-center gap-4 mb-6">
           <div className="w-24 h-24">
-            {formData.photo && <img src={formData.photo} alt="Fotoğraf" className="w-full h-full rounded-md" />}
+            {formData.photo && (
+              <img src={formData.photo} alt="Fotoğraf" className="w-full h-full rounded-md object-cover" />
+            )}
           </div>
-          {formData.name && <h1 className="text-base font-normal">{formData.name}</h1>}
+          {formData.name && <h1 className="text-xl font-semibold text-indigo-900">{formData.name}</h1>}
         </div>
 
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-4">
           {formData.email && (
-            <p className="text-sm flex items-center gap-2">
-              <Mail className="w-4 h-4" />{formData.email}
-            </p>
+            <div className="icon-wrapper">
+              <Mail className="icon text-indigo-500" />
+              <span className="text-sm text-gray-600">{formData.email}</span>
+            </div>
           )}
           {formData.phone && (
-            <p className="text-sm flex items-center gap-2">
-              <Phone className="w-4 h-4" />{formData.phone}
-            </p>
+            <div className="icon-wrapper">
+              <Phone className="icon text-indigo-500" />
+              <span className="text-sm text-gray-600">{formData.phone}</span>
+            </div>
           )}
           {formData.birthdate && (
-            <p className="text-sm flex items-center gap-2">
-              <Calendar className="w-4 h-4" />{formData.birthdate}
-            </p>
+            <div className="icon-wrapper">
+              <Calendar className="icon text-indigo-500" />
+              <span className="text-sm text-gray-600">{formData.birthdate}</span>
+            </div>
           )}
           {formData.militaryStatus && (
-            <p className="text-sm flex items-center gap-2">
-              <Shield className="w-4 h-4" />{formData.militaryStatus}
-            </p>
+            <div className="icon-wrapper">
+              <Shield className="icon text-indigo-500" />
+              <span className="text-sm text-gray-600">{formData.militaryStatus}</span>
+            </div>
           )}
         </div>
 
         {formData.bio && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <p className="text-sm flex items-center gap-2">
-              <MessageSquare className="w-4 h-4" />{formData.bio}
-            </p>
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">Hakkımda</h2>
+              <div className="icon-wrapper">
+                <MessageSquare className="icon text-indigo-500" />
+                <p className="text-sm text-gray-600 flex-grow">{formData.bio}</p>
+              </div>
+            </div>
           </>
         )}
 
         {formData.education.some(edu => edu.school || edu.degree || edu.year) && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <h2 className="text-lg font-normal mt-6">Eğitim</h2>
-            {formData.education.map((edu) => {
-              if (edu.school || edu.degree || edu.year) {
-                return (
-                  <p key={edu.id} className="text-sm flex items-center gap-2">
-                    <School className="w-4 h-4" />
-                    {[edu.school, edu.degree, edu.year].filter(Boolean).join(' - ')}
-                  </p>
-                );
-              }
-              return null;
-            })}
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">Eğitim</h2>
+              <div className="space-y-2">
+                {formData.education.map((edu) => {
+                  if (edu.school || edu.degree || edu.year) {
+                    return (
+                      <div key={edu.id} className="icon-wrapper">
+                        <School className="icon text-indigo-500" />
+                        <span className="text-sm text-gray-600">
+                          {[edu.school, edu.degree, edu.year].filter(Boolean).join(' - ')}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
           </>
         )}
 
         {formData.experiences.some(exp => exp.role || exp.company || exp.duration) && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <h2 className="text-lg font-normal mt-6">İş Tecrübeleri</h2>
-            {formData.experiences.map((exp) => {
-              if (exp.role || exp.company || exp.duration) {
-                return (
-                  <p key={exp.id} className="text-sm flex items-center gap-2">
-                    <Briefcase className="w-4 h-4" />
-                    {[exp.role, exp.company, exp.duration].filter(Boolean).join(' - ')}
-                  </p>
-                );
-              }
-              return null;
-            })}
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">İş Tecrübeleri</h2>
+              {formData.experiences.map((exp) => {
+                if (exp.role || exp.company || exp.duration) {
+                  return (
+                    <p key={exp.id} className="icon-wrapper">
+                      <Briefcase className="icon text-indigo-500" />
+                      {[exp.role, exp.company, exp.duration].filter(Boolean).join(' - ')}
+                    </p>
+                  );
+                }
+                return null;
+              })}
+            </div>
           </>
         )}
 
         {formData.skills && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <h2 className="text-lg font-normal mt-6">Beceriler</h2>
-            <p className="text-sm flex items-center gap-2">
-              <Circle className="w-4 h-4" />{formData.skills}
-            </p>
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">Beceriler</h2>
+              <div className="icon-wrapper">
+                <Circle className="icon text-indigo-500" />
+                <span className="text-sm text-gray-600">{formData.skills}</span>
+              </div>
+            </div>
           </>
         )}
 
         {formData.interests && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <h2 className="text-lg font-normal mt-6">İlgi Alanları</h2>
-            <p className="text-sm flex items-center gap-2">
-              <Circle className="w-4 h-4" />{formData.interests}
-            </p>
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">İlgi Alanları</h2>
+              <div className="icon-wrapper">
+                <MessageSquare className="icon text-indigo-500" />
+                <span className="text-sm text-gray-600">{formData.interests}</span>
+              </div>
+            </div>
           </>
         )}
 
         {formData.languages && (
           <>
-            <hr className="my-4 border-gray-300" />
-            <h2 className="text-lg font-normal mt-6">Diller</h2>
-            <p className="text-sm flex items-center gap-2">
-              <Circle className="w-4 h-4" />{formData.languages}
-            </p>
+            <hr className="my-4 border-indigo-100" />
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold text-indigo-900">Diller</h2>
+              <div className="icon-wrapper">
+                <School className="icon text-indigo-500" />
+                <span className="text-sm text-gray-600">{formData.languages}</span>
+              </div>
+            </div>
           </>
         )}
       </div>

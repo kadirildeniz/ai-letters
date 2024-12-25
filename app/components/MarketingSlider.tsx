@@ -4,6 +4,8 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
+import { FileText, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
+
 
 const advantages = [
   {
@@ -30,34 +32,39 @@ const advantages = [
 
 export default function MarketingSlider() {
   return (
-    <section className="py-12 bg-gray-100">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-center mb-8">Avantajlarımız</h2>
-        
-        <Carousel>
-          <CarouselContent>
-            {advantages.map((advantage, index) => (
-              <CarouselItem key={index} className="basis-1/1 md:basis-1/2 lg:basis-1/4 px-2">
-                <Card className="h-[250px] flex flex-col justify-between shadow-md">
-                  <CardHeader>
-                    <div className="text-4xl">{advantage.icon}</div>
-                    <CardTitle className="text-lg font-semibold mt-2">{advantage.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 text-sm">{advantage.description}</p>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-        
-        <div className="flex justify-center mt-6">
-          <Button className="flex items-center gap-2">
-            Daha Fazla Bilgi <ChevronRight size={16} />
-          </Button>
+    <div className="container mx-auto px-4 py-16">
+    <h2 className="text-3xl font-bold text-center mb-12">Neden Bizi Tercih Etmelisiniz?</h2>
+    <div className="grid md:grid-cols-3 gap-8">
+      <Card className="p-6 hover:shadow-lg transition-shadow border-indigo-100">
+        <div className="p-3 bg-indigo-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+          <Sparkles className="h-6 w-6 text-indigo-600" />
         </div>
-      </div>
-    </section>
+        <h3 className="text-xl font-semibold mb-3">AI Destekli İçerik</h3>
+        <p className="text-gray-600">
+          Yapay zeka ile içeriklerinizi otomatik olarak profesyonel bir dille geliştirin.
+        </p>
+      </Card>
+
+      <Card className="p-6 hover:shadow-lg transition-shadow border-indigo-100">
+        <div className="p-3 bg-green-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+          <FileText className="h-6 w-6 text-green-600" />
+        </div>
+        <h3 className="text-xl font-semibold mb-3">Modern Tasarımlar</h3>
+        <p className="text-gray-600">
+          İşverenler tarafından tercih edilen profesyonel ve modern şablonlar.
+        </p>
+      </Card>
+
+      <Card className="p-6 hover:shadow-lg transition-shadow border-indigo-100">
+        <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+          <CheckCircle className="h-6 w-6 text-blue-600" />
+        </div>
+        <h3 className="text-xl font-semibold mb-3">Kolay Kullanım</h3>
+        <p className="text-gray-600">
+          Kullanıcı dostu arayüz ile dakikalar içinde profesyonel CV'nizi oluşturun.
+        </p>
+      </Card>
+    </div>
+  </div>
   );
 }

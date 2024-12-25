@@ -3,33 +3,50 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { FileText, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
+
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-t from-gray-100 to-white py-16 md:py-24">
-      <div className="container mx-auto flex flex-col md:flex-row items-center px-6 md:px-12 gap-8">
-        
-        <div className="flex-1 text-center md:text-left">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            AI Destekli CV Oluşturucu
+    <div className="bg-gradient-to-b from-indigo-50 to-white">
+    <div className="container mx-auto px-4 py-16">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            AI Destekli CV Oluşturucu ile Kariyerinizi Öne Çıkarın
           </h1>
-          <p className="text-gray-600 mb-6 md:mb-8 max-w-md">
-            AI teknolojisi ile profesyonel CV'ler oluşturun, iş başvurularınızı güçlendirin ve kariyerinizde bir adım öne geçin. Hemen deneyin ve farkı hissedin!
+          <p className="text-lg text-gray-600 mb-8">
+            Yapay zeka teknolojimiz ile profesyonel CV'nizi dakikalar içinde oluşturun. 
+            Modern tasarım ve akıllı içerik önerileriyle iş başvurularınızda fark yaratın.
           </p>
-          <Link href="/generate" className="inline-block bg-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">Hemen Başla</Link>
+          <div className="flex gap-4">
+            <Link href="/generate">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6 rounded-lg text-lg">
+                Hemen Başla
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button variant="outline" className="px-8 py-6 rounded-lg text-lg border-indigo-200 text-indigo-600 hover:bg-indigo-50">
+                Daha Fazla Bilgi
+              </Button>
+            </Link>
+          </div>
         </div>
-
-        <div className="flex-1 flex justify-center md:justify-end">
+        <div className="relative">
           <Image
             src="/cv-one.png"
-            alt="AI Destekli CV Oluşturucu"
-            width={500}
-            height={400}
-            className="rounded-lg shadow-lg h-[400px] object-cover object-top"
+            alt="CV Örneği"
+            width={600}
+            height={800}
+            className="rounded-lg shadow-2xl"
           />
+          <div className="absolute -top-4 -right-4 bg-indigo-600 text-white p-4 rounded-lg shadow-lg">
+            <Sparkles className="h-6 w-6" />
+          </div>
         </div>
-        
       </div>
-    </section>
+    </div>
+  </div>
   );
 }

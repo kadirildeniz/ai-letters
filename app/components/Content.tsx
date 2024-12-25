@@ -1,62 +1,27 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Content() {
   return (
-    <section className="py-12 px-6 md:px-12 lg:px-24 bg-gradient-to-t from-white to-gray-100">
-      <div className="container mx-auto">
-        <h1 className="text-4xl font-bold text-center text-gray-900 mb-6">
-          AI Destekli CV Oluşturucu ile Geleceğe Hazır Olun
-        </h1>
-
-        <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
-          Profesyonel ve etkileyici CV'ler oluşturmak hiç bu kadar kolay olmamıştı. AI teknolojisinin gücünü kullanarak kariyer hedeflerinize bir adım daha yaklaşın.
-        </p>
-
-        <Separator className="my-8" />
-
-        <div className="space-y-8">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">🌟 Neden Biz?</h2>
-            <p className="text-gray-600">
-              AI destekli sistemimiz, özgeçmişlerinizi analiz eder ve işverenlerin dikkatini çekecek şekilde optimize eder. 
-              Gelişmiş algoritmalarımız sayesinde doğru bilgiyi doğru şekilde sunarsınız.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">🚀 Hızlı ve Etkili</h2>
-            <p className="text-gray-600">
-              Kullanıcı dostu arayüzümüz ve güçlü yapay zeka motorumuz sayesinde dakikalar içinde profesyonel CV'ler oluşturabilirsiniz.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">🔒 Güvenlik ve Gizlilik</h2>
-            <p className="text-gray-600">
-              Kişisel verileriniz bizim için önemlidir. Verileriniz güvenle saklanır ve üçüncü taraflarla paylaşılmaz.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">📈 Kariyerinizi Bir Üst Seviyeye Taşıyın</h2>
-            <p className="text-gray-600">
-              Profesyonel şablonlar ve kişiye özel öneriler ile kariyerinizde fark yaratın. AI destekli analizlerle güçlü yönlerinizi vurgulayın.
-            </p>
-          </div>
-        </div>
-
-        <Separator className="my-8" />
-
-        <div className="text-center mt-12">
-          <h3 className="text-xl font-medium text-gray-800 mb-4">
-            Hemen Başlayın ve İlk CV'nizi Oluşturun!
-          </h3>
-          <Link href="/generate" className="inline-block bg-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">Ücretsiz Deneyin</Link>
-        </div>
-      </div>
-    </section>
+    <div className="bg-indigo-600 text-white">
+    <div className="container mx-auto px-4 py-16 text-center">
+      <h2 className="text-3xl font-bold mb-6">
+        Profesyonel CV'nizi Hemen Oluşturun
+      </h2>
+      <p className="text-lg mb-8 text-indigo-100">
+        Yapay zeka destekli platformumuz ile kariyerinizde fark yaratın.
+      </p>
+      <Link href="/generate">
+        <Button className="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-6 rounded-lg text-lg">
+          CV Oluşturmaya Başla
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </Link>
+    </div>
+  </div>
   );
 }

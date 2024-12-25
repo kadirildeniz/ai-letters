@@ -1,16 +1,18 @@
-import Image from "next/image";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import MarketingSlider from "./components/MarketingSlider";
-import Content from "./components/Content";
-import Footer from "./components/Footer";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { FileText, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import Hero from './components/Hero';
+import MarketingSlider from './components/MarketingSlider';
+import Content from './components/Content';
 
 export default function Home() {
   return (
-    <div className="">
-      <Hero />
-      <MarketingSlider />
-      <Content />
-    </div>
+    <main className="flex min-h-screen flex-col">
+     <Hero />
+    <MarketingSlider />
+     <Content />
+    </main>
   );
 }
