@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="container mx-auto flex flex-col md:flex-row items-center px-6 md:px-12 gap-8">
         
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             AI Destekli CV Oluşturucu
           </h1>
           <p className="text-gray-600 mb-6 md:mb-8 max-w-md">

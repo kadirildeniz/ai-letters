@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Upload, Plus, Minus, Mail, Phone, Calendar, Shield, MessageSquare, School, Briefcase, Circle, Loader2 } from 'lucide-react';
+import { Upload, Plus, Minus, Mail, Phone, Calendar, Shield, MessageSquare, School, Briefcase, Circle, Loader2, Sparkles } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 
 export default function Generate() {
@@ -186,29 +186,27 @@ export default function Generate() {
               className="mb-3"
               style={{ fontSize: '16px' }}
             />
-            <div className="flex flex-col gap-2 mb-3">
+            <div className="relative mb-6">
               <Textarea
                 placeholder="Biyografi"
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
-                className="mb-1"
+                className="min-h-[120px] resize-none"
                 style={{ fontSize: '16px' }}
               />
               <Button
                 onClick={() => enhanceText('bio')}
                 disabled={isEnhancing.bio || !formData.bio}
-                className="text-sm self-end"
+                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                variant="ghost"
+                size="icon"
+                title="AI ile İyileştir"
               >
                 {isEnhancing.bio ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    İyileştiriliyor...
-                  </>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <>
-                    AI ile İyileştir
-                  </>
+                  <Sparkles className="h-4 w-4" />
                 )}
               </Button>
             </div>
@@ -287,83 +285,77 @@ export default function Generate() {
         {step === 3 && (
           <>
             <h2 className="text-base font-normal mb-4">3. İlgi Alanları ve Beceriler</h2>
-            <div className="flex flex-col gap-2 mb-3">
+            <div className="relative mb-6">
               <Textarea
                 placeholder="Beceriler"
                 name="skills"
                 value={formData.skills}
                 onChange={handleChange}
-                className="mb-1"
+                className="min-h-[120px] resize-none"
                 style={{ fontSize: '16px' }}
               />
               <Button
                 onClick={() => enhanceText('skills')}
                 disabled={isEnhancing.skills || !formData.skills}
-                className="text-sm self-end"
+                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                variant="ghost"
+                size="icon"
+                title="AI ile İyileştir"
               >
                 {isEnhancing.skills ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    İyileştiriliyor...
-                  </>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <>
-                    AI ile İyileştir
-                  </>
+                  <Sparkles className="h-4 w-4" />
                 )}
               </Button>
             </div>
 
-            <div className="flex flex-col gap-2 mb-3">
+            <div className="relative mb-6">
               <Textarea
                 placeholder="İlgi Alanları"
                 name="interests"
                 value={formData.interests}
                 onChange={handleChange}
-                className="mb-1"
+                className="min-h-[120px] resize-none"
                 style={{ fontSize: '16px' }}
               />
               <Button
                 onClick={() => enhanceText('interests')}
                 disabled={isEnhancing.interests || !formData.interests}
-                className="text-sm self-end"
+                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                variant="ghost"
+                size="icon"
+                title="AI ile İyileştir"
               >
                 {isEnhancing.interests ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    İyileştiriliyor...
-                  </>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <>
-                    AI ile İyileştir
-                  </>
+                  <Sparkles className="h-4 w-4" />
                 )}
               </Button>
             </div>
 
-            <div className="flex flex-col gap-2 mb-3">
+            <div className="relative mb-6">
               <Textarea
                 placeholder="Diller"
                 name="languages"
                 value={formData.languages}
                 onChange={handleChange}
-                className="mb-1"
+                className="min-h-[120px] resize-none"
                 style={{ fontSize: '16px' }}
               />
               <Button
                 onClick={() => enhanceText('languages')}
                 disabled={isEnhancing.languages || !formData.languages}
-                className="text-sm self-end"
+                className="absolute bottom-4 right-4 h-8 w-8 p-0 bg-indigo-500 hover:bg-indigo-600"
+                variant="ghost"
+                size="icon"
+                title="AI ile İyileştir"
               >
                 {isEnhancing.languages ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    İyileştiriliyor...
-                  </>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <>
-                    AI ile İyileştir
-                  </>
+                  <Sparkles className="h-4 w-4" />
                 )}
               </Button>
             </div>
@@ -385,52 +377,106 @@ export default function Generate() {
           <div className="w-24 h-24">
             {formData.photo && <img src={formData.photo} alt="Fotoğraf" className="w-full h-full rounded-md" />}
           </div>
-          <h1 className="text-base font-normal">{formData.name}</h1>
+          {formData.name && <h1 className="text-base font-normal">{formData.name}</h1>}
         </div>
-        <p className="text-sm flex items-center gap-2 "><Mail className="w-4 h-4" />{formData.email} </p>
-        <p className="text-sm flex items-center gap-2"> <Phone className="w-4 h-4" />{formData.phone}</p>
-        <p className="text-sm flex items-center gap-2"> <Calendar className="w-4 h-4" />{formData.birthdate}</p>
-        <p className="text-sm flex items-center gap-2"><Shield className="w-4 h-4" />{formData.militaryStatus} </p>
 
-        <hr className="my-4 border-gray-300" />
-        <p className="text-sm flex items-center gap-2"> <MessageSquare className="w-4 h-4" />{formData.bio}</p>
-        <hr className="my-4 border-gray-300" />
-        <h2 className="text-lg font-normal mt-6">Eğitim</h2>
-        {formData.education.map((edu) => (
-          <p key={edu.id} className="text-sm flex items-center gap-2">
-            <School className="w-4 h-4" />{edu.school} - {edu.degree} ({edu.year})
-          </p>
-        ))}
+        <div className="space-y-2">
+          {formData.email && (
+            <p className="text-sm flex items-center gap-2">
+              <Mail className="w-4 h-4" />{formData.email}
+            </p>
+          )}
+          {formData.phone && (
+            <p className="text-sm flex items-center gap-2">
+              <Phone className="w-4 h-4" />{formData.phone}
+            </p>
+          )}
+          {formData.birthdate && (
+            <p className="text-sm flex items-center gap-2">
+              <Calendar className="w-4 h-4" />{formData.birthdate}
+            </p>
+          )}
+          {formData.militaryStatus && (
+            <p className="text-sm flex items-center gap-2">
+              <Shield className="w-4 h-4" />{formData.militaryStatus}
+            </p>
+          )}
+        </div>
 
-        <hr className="my-4 border-gray-300" />
+        {formData.bio && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <p className="text-sm flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />{formData.bio}
+            </p>
+          </>
+        )}
 
-        <h2 className="text-lg font-normal mt-6">İş Tecrübeleri</h2>
-        {formData.experiences.map((exp) => (
-          <p key={exp.id} className="text-sm flex items-center gap-2">
-            <Briefcase className="w-4 h-4" />{exp.role} - {exp.company} ({exp.duration})
-          </p>
-        ))}
+        {formData.education.some(edu => edu.school || edu.degree || edu.year) && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <h2 className="text-lg font-normal mt-6">Eğitim</h2>
+            {formData.education.map((edu) => {
+              if (edu.school || edu.degree || edu.year) {
+                return (
+                  <p key={edu.id} className="text-sm flex items-center gap-2">
+                    <School className="w-4 h-4" />
+                    {[edu.school, edu.degree, edu.year].filter(Boolean).join(' - ')}
+                  </p>
+                );
+              }
+              return null;
+            })}
+          </>
+        )}
 
-        <hr className="my-4 border-gray-300" />
+        {formData.experiences.some(exp => exp.role || exp.company || exp.duration) && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <h2 className="text-lg font-normal mt-6">İş Tecrübeleri</h2>
+            {formData.experiences.map((exp) => {
+              if (exp.role || exp.company || exp.duration) {
+                return (
+                  <p key={exp.id} className="text-sm flex items-center gap-2">
+                    <Briefcase className="w-4 h-4" />
+                    {[exp.role, exp.company, exp.duration].filter(Boolean).join(' - ')}
+                  </p>
+                );
+              }
+              return null;
+            })}
+          </>
+        )}
 
-        <h2 className="text-lg font-normal mt-6">Beceriler</h2>
-        <p className="text-sm flex items-center gap-2">
-          <Circle className="w-4 h-4" />{formData.skills}
-        </p>
+        {formData.skills && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <h2 className="text-lg font-normal mt-6">Beceriler</h2>
+            <p className="text-sm flex items-center gap-2">
+              <Circle className="w-4 h-4" />{formData.skills}
+            </p>
+          </>
+        )}
 
-        <hr className="my-4 border-gray-300" />
+        {formData.interests && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <h2 className="text-lg font-normal mt-6">İlgi Alanları</h2>
+            <p className="text-sm flex items-center gap-2">
+              <Circle className="w-4 h-4" />{formData.interests}
+            </p>
+          </>
+        )}
 
-        <h2 className="text-lg font-normal mt-6">İlgi Alanları</h2>
-        <p className="text-sm flex items-center gap-2">
-          <Circle className="w-4 h-4" />{formData.interests}
-        </p>
-
-        <hr className="my-4 border-gray-300" />
-
-        <h2 className="text-lg font-normal mt-6">Diller</h2>
-        <p className="text-sm flex items-center gap-2">
-          <Circle className="w-4 h-4" />{formData.languages}
-        </p>
+        {formData.languages && (
+          <>
+            <hr className="my-4 border-gray-300" />
+            <h2 className="text-lg font-normal mt-6">Diller</h2>
+            <p className="text-sm flex items-center gap-2">
+              <Circle className="w-4 h-4" />{formData.languages}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
